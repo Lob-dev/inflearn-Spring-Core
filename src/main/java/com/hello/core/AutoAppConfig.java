@@ -1,5 +1,8 @@
 package com.hello.core;
 
+import com.hello.core.member.MemberRepository;
+import com.hello.core.member.MemoryMemberRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -11,4 +14,15 @@ import org.springframework.context.annotation.FilterType;
         excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class)
 )
 public class AutoAppConfig {
+
+    //Overriding bean definition for bean 'memoryMemberRepository' with a different definition:
+    //수동 등록 빈이 자동 등록 빈보다 우선권을 가진다.
+    //수동 빈이 자동 빈을 오버라이딩 해버린다. (원래는..)
+    //최근 버전의 스프링 부트는 수동 빈 등록과 자동 등록 빈이 충돌이 나면 에러를 발생시킨다.
+    //관련 설정 spring.main.allow-bean-definition-overriding=false
+    @Bean(name = "memoryMemberRepository")
+    MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+
 }
